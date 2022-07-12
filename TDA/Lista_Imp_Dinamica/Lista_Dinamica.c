@@ -109,10 +109,29 @@ booleano eliminarDeListaFrente(Lista* pl, void* elem, size_t tamElem){
     Nodo* nae=*pl;
 
     if(!nae){
-        return VACIA;
+        return FALSO;
     }
 
     *pl=nae->sig;
+    destruirNodo(nae,elem,tamElem);
+
+    return TODO_OK;
+
+}
+
+booleano eliminarDeListaFondo(Lista* pl, void* elem, size_t tamElem){
+
+    
+
+    if(!*pl){
+        return FALSO;
+    }
+
+    while((*pl)->sig){
+        pl = &(*pl)->sig;
+    }
+    Nodo* nae = *pl;
+    *pl = NULL;
     destruirNodo(nae,elem,tamElem);
 
     return TODO_OK;
@@ -251,4 +270,47 @@ Lista* buscarMinimoDeLista(Lista* pl,Cmp cmp){
 
     return plMinimo;
 
+}
+
+int largoLista(Lista* pl){
+    int nodos=0;
+    while(*pl){
+        pl = &(*pl)->sig;
+        nodos++;
+    }
+    return nodos;
+}
+
+void* dirElementoDeListaPos(Lista* pl,int pos){
+    int i;
+    for(i=0;i<pos;i++){
+        pl = &(*pl)->sig;
+    }
+    return (*pl)->elem;
+
+}
+
+booleano hayDuplicados(Lista* pl,Cmp cmp){
+    int comp;
+    Nodo* act;
+    while(*pl){
+        act = (*pl)->sig;
+        while(act){
+            comp = cmp(act->elem,(*pl)->elem);
+            if(comp == 0){
+                return VERDADERO;
+            }
+            act = act->sig;
+        }
+        pl = &(*pl)->sig;
+    }
+    return FALSO;
+}
+
+void verElementoEnPos(Lista* pl, void* elem,size_t tamElem,int pos){
+    int i;
+    for(i=1;i<pos;i++){
+        pl = &(*pl)->sig;
+    }
+    memcpy(elem,(*pl)->elem,tamElem);
 }

@@ -10,7 +10,7 @@ booleano añadirNodoHijo(Grafo* pg,void* elem,size_t tamElem){
         return FALSO;
     }
 
-    insertarEnListaFondo(&nue->hijos,nue,sizeof(NodoG));
+    insertarEnListaFondo(&(*pg)->hijos,nue,sizeof(NodoG));
     return VERDADERO;
 }
 
@@ -28,9 +28,21 @@ void verElemento(Grafo* pg,void* elem,size_t tamElem){
 void recorrerGrafoComoArbolOrd(Grafo* pg,Accion acc,void* datosAccion){
     int i;
 
-    /*for(i=1;i<=largoLista(&(*pg)->hijos);i++){
-        
-        recorrerGrafoComoArbolOrd()
+    if(!(*pg)->hijos){
+        acc((*pg)->elem,datosAccion);
+        return;
+    }
 
-    }*/
+    for(i=1;i<=largoLista(&(*pg)->hijos);i++){
+        
+        recorrerGrafoComoArbolOrd(dirElementoDeListaPos(&(*pg)->hijos,i),acc,datosAccion);
+
+    }
+
+    acc((*pg)->elem,datosAccion);
+
+}
+
+void insertarListaEnHijo(Grafo* pg,Lista* pl){
+    (*pg)->hijos=*pl;
 }

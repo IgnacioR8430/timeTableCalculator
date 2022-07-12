@@ -30,6 +30,10 @@ int eliminarDuplicadosOrdenada(Lista* pl, Cmp cmp);
 void vaciarLista(Lista* pl);
 void recorrerLista(Lista* pl,Accion accion,void* datosAccion);  //Recorrida Interna
 
+int largoLista(Lista* pl);
+booleano hayDuplicados(Lista* pl,Cmp cmp);
+void verElementoEnPos(Lista* pl, void* elem,size_t tamElem,int pos);
+
 /// Iterador (Recorrida externa)
 booleano crearIterador(Iterador* it,const Lista* pl);
 booleano primeroDeLista(Iterador* it, void* elem, size_t tamElem);

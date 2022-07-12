@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "grafo_imp_dinamica.h": "c"
+        "grafo_imp_dinamica.h": "c",
+        "lista.h": "c"
     }
 }
