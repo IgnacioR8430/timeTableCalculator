@@ -15,7 +15,7 @@
 void crearLista(Lista* pl);
 int insertarEnListaOrdenada(Lista* pl, const void* elem, size_t tamElem, Cmp cmp);
 int insertarEnListaEnPos(Lista* pl, const void* elem, size_t tamElem,int pos);
-int insertarEnListaFrentre(Lista* pl, const void* elem, size_t tamElem);
+int insertarEnListaFrente(Lista* pl, const void* elem, size_t tamElem);
 int insertarEnListaFondo(Lista* pl, const void* elem, size_t tamElem);
 booleano eliminarDeListaOrdenada(Lista* pl, void* elem, size_t tamElem, Cmp cmp);
 booleano eliminarDeListaEnPos(Lista* pl, void* elem, size_t tamElem,int pos);

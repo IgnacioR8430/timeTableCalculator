@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <conio.h>
 #include "..\Comun\Comun.h"
+
 #define LISTA_IMP_DINAMICA
 #include "..\TDA\Lista\Lista.h"
 
@@ -27,24 +28,50 @@ void cyan();
 void yellow();
 void red();
 void purple();
+int calculaPosibilidades(Lista* pl,int cantMaterias, Lista* plCantHor);
+int calculaIndice(int materia,int iteracion, Lista* plCantHor, int cantMaterias);
+
 
 int main(){
 
-    int i,j,k,a,w=1;
-
+    int x,y,i,j,k,a,w=1;
+    int indice;
     generaArchivoHorario();
 
     Lista listaHorariosMaterias;
     crearLista(&listaHorariosMaterias);
+    Lista listaAux;
+    crearLista(&listaAux);
+    Lista listaCantHorarios;
+    crearLista(&listaCantHorarios);
+    Horario horarioAux;
+    Lista listaResultado;
+    crearLista(&listaResultado);
 
     cargarHorariosEnListas("archivoHorarios.dat",&listaHorariosMaterias);
 
     int cantidadMaterias = largoLista(&listaHorariosMaterias);
-    Lista listaAux;
-    Lista listaResultado;
-    crearLista(&listaResultado);
-    Horario horarioAux;
 
+    int totalPosibilidades = calculaPosibilidades(&listaHorariosMaterias,cantidadMaterias,&listaCantHorarios);
+
+    for(x=1;x<=totalPosibilidades;x++){
+        for(y=cantidadMaterias;y>=1;y--){
+            verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),y);
+            indice = calculaIndice(y,x,&listaCantHorarios,cantidadMaterias);
+            verElementoEnPos(&listaAux,&horarioAux,sizeof(Horario),indice);
+            insertarEnListaFrente(&listaResultado,&horarioAux,sizeof(Horario));
+        }
+        if(!hayDuplicados(&listaResultado,comparaHorarios)){
+            purple();
+            printf("OPCION: %d \n",w);
+            w++;
+            resetColor();
+            imprimirHorario(&listaResultado);
+        }
+        vaciarLista(&listaResultado);
+    }
+
+    /*
     verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),1); // listaAux == listaAM1
     for(i = 1;i<=largoLista(&listaAux);i++){
         verElementoEnPos(&listaAux,&horarioAux,sizeof(Horario),i);
@@ -79,10 +106,54 @@ int main(){
         eliminarDeListaFondo(&listaResultado,NULL,0);
         verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),1); // listaAux == listaAM1
     }
-
+    */
     //printf("%s | %d | %d | %d",horarioAux.nombre,horarioAux.dia1,horarioAux.dia2,horarioAux.dia3);
     //getch();
     return 0;
+}
+
+int calculaIndice(int materia,int iteracion,Lista* plCantHor, int cantMaterias){
+
+    int modul,div=1,i,cantAux;
+    int res;
+
+
+    if(materia == cantMaterias){
+        verElementoEnPos(plCantHor,&modul,sizeof(int),materia);
+        return ((iteracion-1)%modul)+1;
+    }
+    else{
+        for(i=cantMaterias;i>materia;i--){
+            verElementoEnPos(plCantHor,&cantAux,sizeof(int),i);
+            div*=cantAux;
+        }
+        verElementoEnPos(plCantHor,&modul,sizeof(int),materia);
+
+        res = ( ( ((iteracion-1)/div) + 1 )%modul );
+        if(res==0){
+            return modul;
+        }
+        return res;
+    }
+
+}
+
+int calculaPosibilidades(Lista* pl,int cantMaterias, Lista* plCantHor){
+
+    int i,res=1;
+    int cantHorarios[cantMaterias];
+    Lista listaAux;
+    for(i=1;i<=cantMaterias;i++){
+        verElementoEnPos(pl,&listaAux,sizeof(Lista),i);
+        cantHorarios[i-1] = largoLista(&listaAux);
+    }
+
+    for(i=0;i<cantMaterias;i++){
+        res*=cantHorarios[i];
+        insertarEnListaFondo(plCantHor,&cantHorarios[i],sizeof(int));
+    }
+
+    return res;
 }
 
 void imprimirHorario(Lista* pl){
@@ -219,9 +290,17 @@ int comparaHorarios(const void* h1,const void* h2){
     Horario* pH1 = (Horario*)h1;
     Horario* pH2 = (Horario*)h2;
 
-    if( (pH1->dia1 != pH2->dia1) || !pH1->dia1 || !pH2->dia1 ){
+    /*if( (pH1->dia1 != pH2->dia1) || !pH1->dia1 || !pH2->dia1 ){
         if((pH1->dia2 != pH2->dia2) || !pH1->dia2 || !pH2->dia2 ){
             if((pH1->dia3 != pH2->dia3) || !pH1->dia3 || !pH2->dia3){
+                return 1;
+            }
+        }
+    }
+    */
+    if( (pH1->dia1 != pH2->dia1 && pH1->dia1 != pH2->dia2 && pH1->dia1 != pH2->dia3) || !pH1->dia1 ){
+        if( (pH1->dia2 != pH2->dia1 && pH1->dia2 != pH2->dia2 && pH1->dia2 != pH2->dia3) || !pH1->dia2 ){
+            if((pH1->dia3 != pH2->dia1 && pH1->dia3 != pH2->dia2 && pH1->dia3 != pH2->dia3 ) || !pH1->dia3 ){
                 return 1;
             }
         }
@@ -253,16 +332,16 @@ void generaArchivoHorario(){
         {"AM1",1,3,0},
         {"AM1",2,4,0},
         {"AM1",9,11,0},
-        {"AM1",7,10,0},
+        //{"AM1",7,10,0},
         {"AM1",13,15,0}
     };
 
-    Horario horariosAGA[]={
+    /*Horario horariosAGA[]={
         {"AGA",1,4,0},
         {"AGA",8,11,0},
         {"AGA",3,5,0},
-        {"AGA",16,18,0},
-    };
+        //{"AGA",16,18,0},
+    };*/
 
     Horario horariosQuimica[]={
         {"Quimica",2,5,0},
@@ -275,17 +354,27 @@ void generaArchivoHorario(){
         {"Discreta",1,0,0},
         {"Discreta",3,0,0},
         {"Discreta",5,0,0},
-        {"Discreta",7,0,0},
+        //{"Discreta",7,0,0},
         {"Discreta",11,0,0},
-        {"Discreta",4,0,0},
+        //{"Discreta",4,0,0},
+    };
+
+    Horario horariosFisica[]={
+        {"Fisica",2,5,0},
+        {"Fisica",1,3,0},
+        {"Fisica",3,6,0},
+        {"Fisica",2,4,0},
+        {"Fisica",13,15,0},
+        {"Fisica",14,17,0},
     };
 
     FILE* pf = fopen("archivoHorarios.dat","wb");
 
-    fwrite(&horariosAM1,sizeof(Horario),5,pf);
-    fwrite(&horariosAGA,sizeof(Horario),4,pf);
+    fwrite(&horariosAM1,sizeof(Horario),4,pf);
+    //fwrite(&horariosAGA,sizeof(Horario),3,pf);
     fwrite(&horariosQuimica,sizeof(Horario),4,pf);
-    fwrite(&horariosDiscreta,sizeof(Horario),6,pf);
+    fwrite(&horariosDiscreta,sizeof(Horario),4,pf);
+    fwrite(&horariosFisica,sizeof(Horario),6,pf);
 
     fclose(pf);
 }

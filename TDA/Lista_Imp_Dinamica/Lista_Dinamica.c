@@ -151,6 +151,19 @@ void recorrerLista(Lista* pl,Accion accion,void* datosAccion){
 
 }
 
+void vaciarLista(Lista* pl){
+    Nodo* nae;
+    Nodo* act=*pl;
+
+    while(act){
+        nae = act;
+        act = act->sig;
+        destruirNodo(nae,NULL,0);
+    }
+    *pl = NULL;
+    
+}
+
 /// ----------------- FUNCIONES ITERADOR -----------------
 
 booleano crearIterador(Iterador* it, const Lista* pl){

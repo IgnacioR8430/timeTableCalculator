@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1657616218 source:f:\github\timetablecalculator\testtimetable\main.c
+1657671727 source:f:\github\timetablecalculator\testtimetable\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -8,7 +8,7 @@
 	"..\Comun\Comun.h"
 	"..\TDA\Lista\Lista.h"
 
-1657593385 f:\github\timetablecalculator\tda\lista\lista.h
+1657657883 f:\github\timetablecalculator\tda\lista\lista.h
 	"..\Lista_Imp_Estatica\Lista_Imp_Estatica.h"
 	"..\Lista_Imp_Dinamica\Lista_Dinamica.h"
 	"..\Lista_Imp_Dinamica_Doble\Lista_Dinamica_Doble.h"
