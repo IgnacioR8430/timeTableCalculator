@@ -1,0 +1,37 @@
+# depslib dependency file v1.0
+1657616218 source:f:\github\timetablecalculator\testtimetable\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<windows.h>
+	<conio.h>
+	"..\Comun\Comun.h"
+	"..\TDA\Lista\Lista.h"
+
+1657593385 f:\github\timetablecalculator\tda\lista\lista.h
+	"..\Lista_Imp_Estatica\Lista_Imp_Estatica.h"
+	"..\Lista_Imp_Dinamica\Lista_Dinamica.h"
+	"..\Lista_Imp_Dinamica_Doble\Lista_Dinamica_Doble.h"
+
+1653329466 f:\github\timetablecalculator\tda\lista_imp_dinamica\lista_dinamica.h
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	"..\..\Nodo\Nodo.h"
+	"..\..\Comun\Comun.h"
+
+1654236047 f:\github\timetablecalculator\nodo\nodo.h
+	<stddef.h>
+	<stdlib.h>
+	<memory.h>
+	"..\Comun\Comun.h"
+
+1655150227 f:\github\timetablecalculator\comun\comun.h
+
+1653570493 f:\github\timetablecalculator\tda\lista_imp_dinamica_doble\lista_dinamica_doble.h
+	"..\..\Nodo\NodoD.h"
+	"..\..\Comun\Comun.h"
+
+1653570653 f:\github\timetablecalculator\nodo\nodod.h
+	<stddef.h>
+

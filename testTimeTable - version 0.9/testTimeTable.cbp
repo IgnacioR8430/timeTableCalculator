@@ -35,10 +35,6 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="color.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="color.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
