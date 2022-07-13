@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1657671727 source:f:\github\timetablecalculator\testtimetable\main.c
+1657672282 source:f:\github\timetablecalculator\testtimetable\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

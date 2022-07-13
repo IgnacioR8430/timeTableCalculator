@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
 #include <conio.h>
+#include "color.h"
 #include "..\Comun\Comun.h"
 
 #define LISTA_IMP_DINAMICA
@@ -18,35 +18,36 @@ typedef struct{
 
 }Horario;
 
-void cargarHorariosEnListas(char* nombreArch,Lista* pl);
 void generaArchivoHorario();
+
+void cargarHorariosEnListas(char* nombreArch,Lista* pl);
 int comparaHorarios(const void* h1,const void* h2);
 void imprimirHorario(Lista* pl);
 void modificaMatrizNombres(const void* elem,char matrizDestino[][21]);
-void resetColor();
-void cyan();
-void yellow();
-void red();
-void purple();
 int calculaPosibilidades(Lista* pl,int cantMaterias, Lista* plCantHor);
 int calculaIndice(int materia,int iteracion, Lista* plCantHor, int cantMaterias);
 
 
 int main(){
 
-    int x,y,i,j,k,a,w=1;
+    int x,y,w=1;
     int indice;
+
     generaArchivoHorario();
 
     Lista listaHorariosMaterias;
     crearLista(&listaHorariosMaterias);
+
     Lista listaAux;
     crearLista(&listaAux);
+
     Lista listaCantHorarios;
     crearLista(&listaCantHorarios);
-    Horario horarioAux;
+
     Lista listaResultado;
     crearLista(&listaResultado);
+
+    Horario horarioAux;
 
     cargarHorariosEnListas("archivoHorarios.dat",&listaHorariosMaterias);
 
@@ -56,10 +57,10 @@ int main(){
 
     for(x=1;x<=totalPosibilidades;x++){
         for(y=cantidadMaterias;y>=1;y--){
-            verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),y);
-            indice = calculaIndice(y,x,&listaCantHorarios,cantidadMaterias);
-            verElementoEnPos(&listaAux,&horarioAux,sizeof(Horario),indice);
-            insertarEnListaFrente(&listaResultado,&horarioAux,sizeof(Horario));
+            verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),y); //carga la lista de horarios de la materia Y
+            indice = calculaIndice(y,x,&listaCantHorarios,cantidadMaterias);    //calcula el indice correspondiente a la dupla iteracion-materia
+            verElementoEnPos(&listaAux,&horarioAux,sizeof(Horario),indice);     //busca la opcion de horario segun el indice calculado
+            insertarEnListaFrente(&listaResultado,&horarioAux,sizeof(Horario)); //
         }
         if(!hayDuplicados(&listaResultado,comparaHorarios)){
             purple();
@@ -70,45 +71,13 @@ int main(){
         }
         vaciarLista(&listaResultado);
     }
-
-    /*
-    verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),1); // listaAux == listaAM1
-    for(i = 1;i<=largoLista(&listaAux);i++){
-        verElementoEnPos(&listaAux,&horarioAux,sizeof(Horario),i);
-        insertarEnListaFondo(&listaResultado,&horarioAux,sizeof(Horario));
-        verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),2); //listaAux == listaAGA
-        for(j = 1;j<=largoLista(&listaAux);j++){
-            verElementoEnPos(&listaAux,&horarioAux,sizeof(Horario),j);
-            insertarEnListaFondo(&listaResultado,&horarioAux,sizeof(Horario));
-            verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),3); //listaAux == listaQuimica
-            for(k = 1;k<=largoLista(&listaAux);k++){
-                verElementoEnPos(&listaAux,&horarioAux,sizeof(Horario),k);
-                insertarEnListaFondo(&listaResultado,&horarioAux,sizeof(Horario));
-                verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),4); //listaAux == listaDiscreta
-                for(a = 1;a<=largoLista(&listaAux);a++){
-                    verElementoEnPos(&listaAux,&horarioAux,sizeof(Horario),a);
-                    insertarEnListaFondo(&listaResultado,&horarioAux,sizeof(Horario));
-                    if(!hayDuplicados(&listaResultado,comparaHorarios)){
-                        purple();
-                        printf("OPCION: %d \n",w);
-                        w++;
-                        resetColor();
-                        imprimirHorario(&listaResultado);
-                    }
-                    eliminarDeListaFondo(&listaResultado,NULL,0);
-                }
-                eliminarDeListaFondo(&listaResultado,NULL,0);
-                verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),3); //listaAux == listaQuimica
-            }
-            eliminarDeListaFondo(&listaResultado,NULL,0);
-            verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),2); //listaAux == listaAGA
-        }
-        eliminarDeListaFondo(&listaResultado,NULL,0);
-        verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),1); // listaAux == listaAM1
+    for(x=1;x<=cantidadMaterias;x++){
+        verElementoEnPos(&listaHorariosMaterias,&listaAux,sizeof(Lista),x);
+        vaciarLista(&listaAux);
     }
-    */
-    //printf("%s | %d | %d | %d",horarioAux.nombre,horarioAux.dia1,horarioAux.dia2,horarioAux.dia3);
-    //getch();
+    vaciarLista(&listaHorariosMaterias);
+    vaciarLista(&listaCantHorarios);
+    getch();
     return 0;
 }
 
@@ -161,23 +130,6 @@ void imprimirHorario(Lista* pl){
     char nombresMaterias[18][21]={};
 
     recorrerLista(pl,(Accion)modificaMatrizNombres,nombresMaterias);
-
-    /*
-    printf("|     Lunes     |     Martes     |   Miercoles   |     Jueves     |    Viernes    |     Sabado     |\n");
-    printf("|---------------|----------------|---------------|----------------|---------------|----------------|\n");
-    printf("|               |                |               |                |               |                |\n");
-    printf("|%15s|%16s|%15s|%16s|%15s|%16s|\n",nombresMaterias[0],nombresMaterias[1],nombresMaterias[2],nombresMaterias[3],nombresMaterias[4],nombresMaterias[5]);
-    printf("|               |                |               |                |               |                |\n");
-    printf("|---------------|----------------|---------------|----------------|---------------|----------------|\n");
-    printf("|               |                |               |                |               |                |\n");
-    printf("|%15s|%16s|%15s|%16s|%15s|%16s|\n",nombresMaterias[6],nombresMaterias[7],nombresMaterias[8],nombresMaterias[9],nombresMaterias[10],nombresMaterias[11]);
-    printf("|               |                |               |                |               |                |\n");
-    printf("|---------------|----------------|---------------|----------------|---------------|----------------|\n");
-    printf("|               |                |               |                |               |                |\n");
-    printf("|%15s|%16s|%15s|%16s|%15s|%16s|\n",nombresMaterias[12],nombresMaterias[13],nombresMaterias[14],nombresMaterias[15],nombresMaterias[16],nombresMaterias[17]);
-    printf("|               |                |               |                |               |                |\n");
-    printf("|---------------|----------------|---------------|----------------|---------------|----------------|\n");
-    printf("\n");*/
 
     printf("|     Lunes     |     Martes     |   Miercoles   |     Jueves     |    Viernes    |     Sabado     |\n");
     printf("|---------------|----------------|---------------|----------------|---------------|----------------|\n");
@@ -290,14 +242,6 @@ int comparaHorarios(const void* h1,const void* h2){
     Horario* pH1 = (Horario*)h1;
     Horario* pH2 = (Horario*)h2;
 
-    /*if( (pH1->dia1 != pH2->dia1) || !pH1->dia1 || !pH2->dia1 ){
-        if((pH1->dia2 != pH2->dia2) || !pH1->dia2 || !pH2->dia2 ){
-            if((pH1->dia3 != pH2->dia3) || !pH1->dia3 || !pH2->dia3){
-                return 1;
-            }
-        }
-    }
-    */
     if( (pH1->dia1 != pH2->dia1 && pH1->dia1 != pH2->dia2 && pH1->dia1 != pH2->dia3) || !pH1->dia1 ){
         if( (pH1->dia2 != pH2->dia1 && pH1->dia2 != pH2->dia2 && pH1->dia2 != pH2->dia3) || !pH1->dia2 ){
             if((pH1->dia3 != pH2->dia1 && pH1->dia3 != pH2->dia2 && pH1->dia3 != pH2->dia3 ) || !pH1->dia3 ){
@@ -310,38 +254,21 @@ int comparaHorarios(const void* h1,const void* h2){
 
 void generaArchivoHorario(){
 
-    /*Horario horariosAM1[]={
-        {"AM1",1,4,0},
-        {"AM1",2,5,0},
-        {"AM1",7,10,0}
-    };
 
-    Horario horariosAGA[]={
-        {"AGA",2,5,0},
-        {"AGA",3,5,0},
-        {"AGA",8,10,0},
-        {"AGA",1,5,0},
-    };
-
-    Horario horariosCompu[]={
-        {"Computacion",6,0,0},
-        {"Computacion",3,0,0},
-    };*/
 
     Horario horariosAM1[]={
         {"AM1",1,3,0},
         {"AM1",2,4,0},
         {"AM1",9,11,0},
-        //{"AM1",7,10,0},
         {"AM1",13,15,0}
     };
 
-    /*Horario horariosAGA[]={
+    Horario horariosAGA[]={
         {"AGA",1,4,0},
         {"AGA",8,11,0},
         {"AGA",3,5,0},
-        //{"AGA",16,18,0},
-    };*/
+        {"AGA",16,18,0},
+    };
 
     Horario horariosQuimica[]={
         {"Quimica",2,5,0},
@@ -354,9 +281,8 @@ void generaArchivoHorario(){
         {"Discreta",1,0,0},
         {"Discreta",3,0,0},
         {"Discreta",5,0,0},
-        //{"Discreta",7,0,0},
+        {"Discreta",7,0,0},
         {"Discreta",11,0,0},
-        //{"Discreta",4,0,0},
     };
 
     Horario horariosFisica[]={
@@ -371,9 +297,9 @@ void generaArchivoHorario(){
     FILE* pf = fopen("archivoHorarios.dat","wb");
 
     fwrite(&horariosAM1,sizeof(Horario),4,pf);
-    //fwrite(&horariosAGA,sizeof(Horario),3,pf);
+    fwrite(&horariosAGA,sizeof(Horario),4,pf);
     fwrite(&horariosQuimica,sizeof(Horario),4,pf);
-    fwrite(&horariosDiscreta,sizeof(Horario),4,pf);
+    fwrite(&horariosDiscreta,sizeof(Horario),5,pf);
     fwrite(&horariosFisica,sizeof(Horario),6,pf);
 
     fclose(pf);
@@ -405,27 +331,4 @@ void cargarHorariosEnListas(char* nombreArch,Lista* pl){
     fclose(pf);
 }
 
-void resetColor(){
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole,7);
-}
 
-void cyan(){
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole,3);
-}
-
-void yellow(){
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole,6);
-}
-
-void red(){
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole,4);
-}
-
-void purple(){
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole,5);
-}
